@@ -298,6 +298,9 @@ export class Cognite3DViewer {
         .subscribe(parseSector => model3d.updateNodeIdMaps(parseSector))
     );
 
+    await this._setInitialModelRotation(model3d, options.revisionId);
+    this.scene.add(new THREE.AxesHelper(400));
+
     this.models.push(model3d);
     this.scene.add(model3d);
 
@@ -321,6 +324,10 @@ export class Cognite3DViewer {
       format: File3dFormat.EptPointCloud
     });
     const model = new CognitePointCloudModel(options.modelId, options.revisionId, potreeGroup, potreeNode);
+
+    await this._setInitialModelRotation(model, options.revisionId);
+    this.scene.add(new THREE.AxesHelper(400));
+
     this.models.push(model);
     this.scene.add(model);
     return model;
@@ -517,6 +524,33 @@ export class Cognite3DViewer {
 
   clearCache(): void {
     throw new NotSupportedInMigrationWrapperError('Cache is not supported');
+  }
+
+  private async _setInitialModelRotation(
+    model: Cognite3DModel | CognitePointCloudModel,
+    revisionId: number
+  ): Promise<void> {
+    let revision;
+    try {
+      revision = await this.sdkClient.revisions3D.retrieve(model.modelId, revisionId);
+    } catch (e) {
+      // not good if it fails, but it's not fatal
+      // tslint:disable-next-line:no-console
+      console.error(e);
+      return;
+    }
+
+    if (revision.rotation) {
+      const defaultRotationMatrix = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0));
+
+      const resultRotationMatrix = new THREE.Matrix4();
+      resultRotationMatrix.makeRotationFromEuler(new THREE.Euler(...revision.rotation));
+
+      // Always rotate Z up to Y up as three.js uses this coordinate system.
+      resultRotationMatrix.premultiply(defaultRotationMatrix);
+
+      model.updateTransformation(resultRotationMatrix);
+    }
   }
 
   private getModels(type: SupportedModelTypes.CAD): Cognite3DModel[];
