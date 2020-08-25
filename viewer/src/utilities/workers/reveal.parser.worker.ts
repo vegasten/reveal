@@ -25,14 +25,19 @@ export class RevealParserWorker {
     return result;
   }
 
-  public async parseAndFinalizeDetailed(i3dFile: string, ctmFiles: ParseCtmInput): Promise<FlatSectorGeometry> {
+  public async parseAndFinalizeDetailed(
+    i3dFileName: string,
+    i3dBuffer: Uint8Array,
+    ctmFiles: ParseCtmInput
+  ): Promise<FlatSectorGeometry> {
     const rust = await rustModule;
     // TODO mattman22 2020-6-24 Handle parse/finalize errors
-    const sectorData = await rust.load_parse_finalize_detailed(
-      i3dFile,
-      ctmFiles.fileNames,
-      ctmFiles.blobUrl,
-      ctmFiles.headers
+    const sectorData = rust.parse_finalize_detailed(
+      i3dFileName,
+      i3dBuffer,
+      new Uint8Array(ctmFiles.buffer),
+      new Uint32Array(ctmFiles.lengths),
+      new Float64Array(ctmFiles.fileIds)
     );
     const sector = sectorData.sector;
     const primitives = this.extractParsedPrimitives(sector);

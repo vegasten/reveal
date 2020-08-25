@@ -1,16 +1,13 @@
-use futures::future::FutureExt;
-use futures::stream::{FuturesUnordered, StreamExt};
 use i3df::renderables::{PrimitiveCollections, Sector};
-use js_sys::{Float32Array, Map, Promise, Uint32Array, Uint8Array};
+use js_sys::{Float32Array, Map, Uint32Array, Uint8Array};
 use serde::{Deserialize, Serialize};
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsValue;
-use wasm_bindgen_futures::JsFuture;
 
 #[macro_use]
 extern crate cached;
-use cached::{Cached, SizedCache};
+use cached::SizedCache;
 
 #[allow(non_snake_case, unused_imports, unknown_lints, clippy::all)]
 #[rustfmt::skip]
@@ -106,9 +103,9 @@ impl CtmResult {
 }
 
 cached_key_result! {
-    PARSE_CTM: SizedCache<String, CtmResult> = SizedCache::with_size(40);
-    Key = { _file_name };
-    fn parse_ctm(_file_name: String, input: &[u8]) -> Result<CtmResult, JsValue> = {
+    PARSE_CTM: SizedCache<u64, CtmResult> = SizedCache::with_size(40);
+    Key = { _file_id };
+    fn parse_ctm(_file_id: u64, input: &[u8]) -> Result<CtmResult, JsValue> = {
         let cursor = std::io::Cursor::new(input);
         let file = match openctm::parse(cursor) {
             Ok(f) => f,
@@ -133,98 +130,35 @@ cached_key_result! {
     }
 }
 
-async fn load_file(
-    blob_url: &str,
-    file_name: String,
-    headers: &JsValue,
-) -> Result<(String, Uint8Array), JsValue> {
-    let value = JsFuture::from(getCadSectorFile(&blob_url, &file_name, headers)).await?;
-    Ok((file_name, Uint8Array::new(&value)))
-}
-
-#[wasm_bindgen(module = "/src/utilities/networking/utilities.ts")]
-extern "C" {
-    fn getCadSectorFile(blob_url: &str, file_name: &str, headers: &JsValue) -> Promise;
-}
-
 #[wasm_bindgen]
-pub async fn load_parse_finalize_detailed(
+pub fn parse_finalize_detailed(
     file_name: String,
-    peripheral_files: JsValue,
-    blob_url: String,
-    headers: JsValue,
+    i3d_file: &[u8],
+    ctm_buffers: &[u8],
+    lengths: &[usize],
+    ids: &[f64],
 ) -> Result<SectorGeometry, JsValue> {
     console_error_panic_hook::set_once();
-    wasm_bindgen::intern(&blob_url);
-    // Check if sector is cached
-    let i3d_future;
-    let res;
-    {
-        // Note: This call to unwrap should only panic if the lock is poisoned
-        // which should only happen during a panic
-        let mut cache = PARSE_AND_CONVERT_SECTOR.lock().unwrap();
-        res = Cached::cache_get(&mut *cache, &file_name).cloned();
-    }
-    if let Some(res) = res {
-        // Cache hit
-        i3d_future = futures::future::ready(Ok(res)).left_future();
-    } else {
-        // Cache miss
-        i3d_future = load_file(&blob_url, file_name.clone(), &headers)
-            .map(|v| {
-                if let Ok((file_name, data)) = v {
-                    parse_and_convert_sector(file_name, &data.to_vec())
-                } else {
-                    Err("Failed to load i3d file".into())
-                }
-            })
-            .right_future();
-    }
 
-    let ctm_file_names: HashSet<String> = serde_wasm_bindgen::from_value(peripheral_files)?;
+    let i3d_parsed = parse_and_convert_sector(file_name, i3d_file)?;
     let mut ctm_map = HashMap::new();
-
-    // Add all cached CtmResults to map
-    {
-        // Note: This call to unwrap should only panic if the lock is poisoned
-        // which should only happen during a panic
-        let mut cache = PARSE_CTM.lock().unwrap();
-        ctm_file_names
-            .iter()
-            .map(|file_name| {
-                (
-                    Cached::cache_get(&mut *cache, file_name).cloned(),
-                    file_name,
-                )
-            })
-            .for_each(|(v, k)| {
-                if let Some(v) = v {
-                    ctm_map.insert(k.clone(), v);
-                }
-            });
+    let mut offset: usize = 0;
+    for (id, length) in ids.iter().zip(lengths.iter()) {
+        let id = *id as u64;
+        // Ignoring this lint so we can use the ? operator and return an error early
+        #[allow(clippy::map_entry)]
+        if !ctm_map.contains_key(&id) {
+            ctm_map.insert(id, parse_ctm(id, &ctm_buffers[offset..offset + length])?);
+        }
+        offset += length;
     }
 
-    // Load, parse, and add CtmResults to map
-    let ctm_future = ctm_file_names
-        .into_iter()
-        .filter(|file_name| !ctm_map.contains_key(file_name))
-        .map(|x| load_file(&blob_url, x, &headers))
-        .collect::<FuturesUnordered<_>>()
-        .for_each_concurrent(5, |x| {
-            if let Ok((file_name, buf)) = x {
-                if let Ok(result) = parse_ctm(file_name.clone(), &buf.to_vec()) {
-                    ctm_map.insert(file_name, result);
-                }
-            }
-            futures::future::ready(())
-        });
-    let (i3d_file, _) = futures::future::join(i3d_future, ctm_future).await;
-    finalize_detailed(i3d_file?, ctm_map)
+    finalize_detailed(i3d_parsed, ctm_map)
 }
 
 fn finalize_detailed(
     i3d_file: Sector,
-    ctm_map: HashMap<String, CtmResult>,
+    ctm_map: HashMap<u64, CtmResult>,
 ) -> Result<SectorGeometry, JsValue> {
     let instance_meshes = &i3d_file.primitive_collections.instanced_mesh_collection;
     let triangle_meshes = &i3d_file.primitive_collections.triangle_mesh_collection;
@@ -242,9 +176,8 @@ fn finalize_detailed(
         for (file_id, mesh_indices) in meshes_grouped_by_file {
             let file_triangle_counts: Vec<_> =
                 mesh_indices.iter().map(|i| triangle_counts[*i]).collect();
-            let filename = format!("mesh_{}.ctm", file_id);
 
-            if let Some(ctm_result) = ctm_map.get(&filename) {
+            if let Some(ctm_result) = ctm_map.get(&file_id) {
                 let indices = &ctm_result.file.indices;
                 let vertices = ctm_result.vertices().to_vec();
                 let normals = ctm_result.normals().map(|x| x.to_vec());
@@ -312,8 +245,7 @@ fn finalize_detailed(
         let meshes_grouped_by_file = group_meshes_by_number(&file_ids);
 
         for (file_id, mesh_indices) in meshes_grouped_by_file {
-            let filename = format!("mesh_{}.ctm", file_id);
-            if let Some(ctm_result) = ctm_map.get(&filename) {
+            if let Some(ctm_result) = ctm_map.get(&file_id) {
                 let indices = &ctm_result.file.indices;
                 let vertices = ctm_result.vertices().to_vec();
                 let normals = ctm_result.normals().map(|x| x.to_vec());

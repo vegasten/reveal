@@ -9,6 +9,7 @@ import {
   OperatorFunction,
   Observable,
   from,
+  zip,
   Subject,
   onErrorResumeNext,
   defer,
@@ -24,6 +25,8 @@ import {
   tap,
   shareReplay,
   take,
+  retry,
+  reduce,
   distinct,
   catchError,
   distinctUntilChanged,
@@ -32,13 +35,14 @@ import {
 import { CadSectorParser } from './CadSectorParser';
 import { SimpleAndDetailedToSector3D } from './SimpleAndDetailedToSector3D';
 import { MemoryRequestCache } from '@/utilities/cache/MemoryRequestCache';
+import { ParseCtmInput } from '@/utilities/workers/types/reveal.parser.types';
 import { SectorQuads, InstancedMesh, InstancedMeshFile, TriangleMesh } from '@/datamodels/cad/rendering/types';
 import { trackError } from '@/utilities/metrics';
-import { BinaryFileProvider, ModelDataClient } from '@/utilities/networking/types';
-import { DetailedSector } from '@/datamodels/cad/sector/detailedSector_generated';
-import { flatbuffers } from 'flatbuffers';
+import { BinaryFileProvider } from '@/utilities/networking/types';
 import { Group } from 'three';
 import { RxCounter } from '@/utilities/RxCounter';
+import { flatbuffers } from 'flatbuffers';
+import { DetailedSector } from '@/datamodels/cad/sector/detailedSector_generated';
 
 type KeyedWantedSector = { key: string; wantedSector: WantedSector };
 type WantedSecorWithRequestObservable = {
@@ -46,6 +50,8 @@ type WantedSecorWithRequestObservable = {
   wantedSector: WantedSector;
   observable: Observable<ConsumedSector>;
 };
+type CtmFileRequest = { blobUrl: string; fileName: string };
+type CtmFileResult = { fileName: string; data: Uint8Array };
 type ParsedData = { blobUrl: string; lod: string; data: SectorGeometry | SectorQuads };
 
 // TODO: j-bjorne 16-04-2020: REFACTOR FINALIZE INTO SOME OTHER FILE PLEZ!
@@ -56,7 +62,9 @@ export class CachedRepository implements Repository {
   > = new MemoryRequestCache({
     maxElementsInCache: 50
   });
-
+  private readonly _ctmFileCache: MemoryRequestCache<string, Observable<CtmFileResult>> = new MemoryRequestCache({
+    maxElementsInCache: 300
+  });
   private readonly _modelSectorProvider: BinaryFileProvider;
   private readonly _modelDataParser: CadSectorParser;
   private readonly _modelDataTransformer: SimpleAndDetailedToSector3D;
@@ -71,21 +79,25 @@ export class CachedRepository implements Repository {
   }> = new Subject();
 
   private readonly _concurrentNetworkOperations: number;
+  private readonly _concurrentCtmRequests: number;
 
   constructor(
     modelSectorProvider: BinaryFileProvider,
     modelDataParser: CadSectorParser,
     modelDataTransformer: SimpleAndDetailedToSector3D,
-    concurrentNetworkOperations: number = 50
+    concurrentNetworkOperations: number = 50,
+    concurrentCtmRequest: number = 10
   ) {
     this._modelSectorProvider = modelSectorProvider;
     this._modelDataParser = modelDataParser;
     this._modelDataTransformer = modelDataTransformer;
     this._concurrentNetworkOperations = concurrentNetworkOperations;
+    this._concurrentCtmRequests = concurrentCtmRequest;
   }
 
   clear() {
     this._consumedSectorCache.clear();
+    this._ctmFileCache.clear();
   }
 
   getParsedData(): Observable<ParsedData> {
@@ -188,6 +200,17 @@ export class CachedRepository implements Repository {
     });
   }
 
+  private catchCtmFileError<T>(ctmRequest: CtmFileRequest, methodName: string) {
+    return catchError<T, Observable<T>>(error => {
+      trackError(error, {
+        moduleName: 'CachedRepository',
+        methodName
+      });
+      this._ctmFileCache.remove(this.ctmFileCacheKey(ctmRequest));
+      throw error;
+    });
+  }
+
   private parsedDataObserver(wantedSector: WantedSector): NextObserver<SectorGeometry | SectorQuads> {
     return {
       next: data => {
@@ -227,32 +250,41 @@ export class CachedRepository implements Repository {
   }
 
   private loadDetailedSectorFromNetwork(wantedSector: WantedSector): Observable<ConsumedSector> {
-    const detailedSectorObservable = onErrorResumeNext(
+    const networkObservable = onErrorResumeNext(
       scheduled(
         defer(() => {
-          return from(
-            this._modelDataParser.parseAndFinalizeI3D(wantedSector.metadata.indexFile.fileName, {
-              fileNames: wantedSector.metadata.indexFile.peripheralFiles,
+          const indexFile = wantedSector.metadata.indexFile;
+          const i3dFileObservable = from(
+            this._modelSectorProvider.getBinaryFile(wantedSector.blobUrl, indexFile.fileName)
+          ).pipe(retry(3));
+          const ctmFilesObservable = from(indexFile.peripheralFiles).pipe(
+            map(fileName => ({
               blobUrl: wantedSector.blobUrl,
-              headers: (this._modelSectorProvider as ModelDataClient<BinaryFileProvider>).headers
-            })
-          ).pipe(
-            catchError(error => {
-              trackError(error, {
-                moduleName: 'CachedRepository',
-                methodName: 'loadDetailedSectorFromNetwork'
-              });
-              this._consumedSectorCache.remove(this.wantedSectorCacheKey(wantedSector));
-              throw error;
-            }),
+              fileName
+            })),
+            this.loadCtmFile(),
+            reduce(
+              (accumulator, value) => {
+                const number = parseInt(value.fileName.replace('mesh_', '').replace('.ctm', ''));
+                accumulator.fileIds.push(number);
+                accumulator.buffer = [...accumulator.buffer, ...value.data];
+                accumulator.lengths.push(value.data.length);
+                return accumulator;
+              },
+              { fileIds: [], lengths: [], buffer: [] } as ParseCtmInput
+            )
+          );
+          return zip(i3dFileObservable, ctmFilesObservable).pipe(
+            this.catchWantedSectorError(wantedSector, 'loadDetailedSectorFromNetwork'),
+            flatMap(([i3dFile, ctmFiles]) =>
+              this._modelDataParser.parseAndFinalizeI3D(
+                wantedSector.metadata.indexFile.fileName,
+                new Uint8Array(i3dFile),
+                ctmFiles
+              )
+            ),
             map(data => {
-              const sector = this.unflattenSector(data as FlatSectorGeometry);
-              this._parsedDataSubject.next({
-                blobUrl: wantedSector.blobUrl,
-                sectorId: wantedSector.metadata.id,
-                lod: 'detailed',
-                data: sector
-              }); // TODO: Remove when migration is gone.
+              const sector = this.unflattenSector(data);
               return sector;
             }),
             tap(this.parsedDataObserver(wantedSector)),
@@ -268,12 +300,40 @@ export class CachedRepository implements Repository {
         asyncScheduler
       )
     );
-    this._consumedSectorCache.forceInsert(this.wantedSectorCacheKey(wantedSector), detailedSectorObservable);
-    return detailedSectorObservable;
+    return networkObservable;
+  }
+
+  private loadCtmFile(): OperatorFunction<CtmFileRequest, CtmFileResult> {
+    return flatMap(ctmRequest => {
+      const key = this.ctmFileCacheKey(ctmRequest);
+      if (this._ctmFileCache.has(key)) {
+        return this._ctmFileCache.get(key);
+      } else {
+        return this.loadCtmFileFromNetwork(ctmRequest);
+      }
+    }, this._concurrentCtmRequests);
+  }
+
+  private loadCtmFileFromNetwork(ctmRequest: CtmFileRequest): Observable<CtmFileResult> {
+    const networkObservable: Observable<{ fileName: string; data: Uint8Array }> = onErrorResumeNext(
+      defer(() => this._modelSectorProvider.getBinaryFile(ctmRequest.blobUrl, ctmRequest.fileName)).pipe(
+        this.catchCtmFileError(ctmRequest, 'loadCtmFileFromNetwork'),
+        retry(3),
+        map(data => ({ fileName: ctmRequest.fileName, data: new Uint8Array(data) })),
+        shareReplay(1),
+        take(1)
+      )
+    );
+    this._ctmFileCache.forceInsert(this.ctmFileCacheKey(ctmRequest), networkObservable);
+    return networkObservable;
   }
 
   private wantedSectorCacheKey(wantedSector: WantedSector) {
     return '' + wantedSector.blobUrl + '.' + wantedSector.metadata.id + '.' + wantedSector.levelOfDetail;
+  }
+
+  private ctmFileCacheKey(request: { blobUrl: string; fileName: string }) {
+    return '' + request.blobUrl + '.' + request.fileName;
   }
 
   private unflattenSector(data: FlatSectorGeometry): SectorGeometry {

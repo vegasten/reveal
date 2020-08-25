@@ -7,7 +7,7 @@ import { mat4, vec3 } from 'gl-matrix';
 import { LevelOfDetail } from './LevelOfDetail';
 import { InstancedMeshFile, TriangleMesh, SectorQuads } from '../rendering/types';
 import { Box3 } from '@/utilities';
-import { ParsedPrimitives, ParseSectorResult, ParseCtmResult } from '@/utilities/workers/types/reveal.parser.types';
+import { ParsedPrimitives, ParseSectorResult } from '@/utilities/workers/types/reveal.parser.types';
 
 export interface ConsumedSector {
   blobUrl: string;
@@ -19,7 +19,7 @@ export interface ConsumedSector {
 export interface ParsedSector {
   blobUrl: string;
   metadata: SectorMetadata;
-  data: null | ParseSectorResult | ParseCtmResult | SectorGeometry | SectorQuads;
+  data: null | ParseSectorResult | SectorGeometry | SectorQuads;
   levelOfDetail: LevelOfDetail;
 }
 

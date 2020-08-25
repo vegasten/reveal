@@ -2,8 +2,6 @@
  * Copyright 2020 Cognite AS
  */
 
-import { HttpHeaders } from '@cognite/sdk-core';
-
 export interface ParseRootSectorArguments {
   parseRootSector: {
     buffer: ArrayBuffer;
@@ -78,16 +76,10 @@ export interface ParseCtmArguments {
     buffer: ArrayBuffer;
   };
 }
-export interface ParseCtmResult {
-  indices: Uint32Array;
-  vertices: Float32Array;
-  normals: Float32Array | undefined;
-}
-
 export interface ParseCtmInput {
-  fileNames: string[];
-  blobUrl: string;
-  headers: HttpHeaders;
+  fileIds: number[];
+  lengths: number[];
+  buffer: number[];
 }
 export interface ParseQuadsArguments {
   parseQuads: {

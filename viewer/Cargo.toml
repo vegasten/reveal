@@ -10,20 +10,15 @@ crate-type = ["cdylib"]
 path = "rust/lib.rs"
 
 [dependencies]
-wasm-bindgen = { version = "0.2.65", features = ["serde-serialize", 'enable-interning'] }
-wasm-bindgen-futures = "0.4.13"
+wasm-bindgen = { version = "0.2.65", features = ["serde-serialize"] }
 js-sys = "0.3.42"
 serde = { version = "1.0.114", features = ["derive"] }
 serde_derive = "1.0.104"
-arraymap = "0.1.1"
 console_error_panic_hook = "0.1.6"
 serde-wasm-bindgen = "0.1.3"
-serde_bytes = "0.11.5"
-byteorder = "1.3.4"
 i3df = { path = "../i3df" }
 f3df = { path = "../f3df" }
 flatbuffers = "0.6.1"
-futures = "0.3.5"
 openctm = { path = "../openctm" }
 
 [dependencies.cached]
@@ -39,7 +34,6 @@ features = [
   'RequestInit',
   'RequestMode',
   'Response',
-  'Window',
 ]
 
 [profile.release]

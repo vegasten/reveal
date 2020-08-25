@@ -6,7 +6,6 @@
 
 export { File3dFormat, ModelTransformation, CogniteColors } from './types';
 export { LocalModelIdentifier, CdfModelIdentifier } from './networking/types';
-export { createOffsetsArray } from './arrays';
 export { Box3 } from './Box3';
 export { HtmlOverlayHelper } from './HtmlOverlayHelper';
 export { worldToViewport } from './worldToViewport';

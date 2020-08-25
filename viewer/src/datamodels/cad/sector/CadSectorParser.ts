@@ -18,13 +18,21 @@ export class CadSectorParser {
     return this.parseSimple(data);
   }
 
-  parseAndFinalizeI3D(i3dFile: string, ctmFiles: ParseCtmInput): Promise<FlatSectorGeometry> {
-    return this.parseAndFinalizeDetailed(i3dFile, ctmFiles);
+  parseAndFinalizeI3D(
+    i3dFileName: string,
+    i3dBuffer: Uint8Array,
+    ctmFiles: ParseCtmInput
+  ): Promise<FlatSectorGeometry> {
+    return this.parseAndFinalizeDetailed(i3dFileName, i3dBuffer, ctmFiles);
   }
 
-  private async parseAndFinalizeDetailed(i3dFile: string, ctmFiles: ParseCtmInput): Promise<FlatSectorGeometry> {
+  private async parseAndFinalizeDetailed(
+    i3dFileName: string,
+    i3dBuffer: Uint8Array,
+    ctmFiles: ParseCtmInput
+  ): Promise<FlatSectorGeometry> {
     return this.workerPool.postWorkToAvailable(async (worker: RevealParserWorker) => {
-      return worker.parseAndFinalizeDetailed(i3dFile, ctmFiles);
+      return worker.parseAndFinalizeDetailed(i3dFileName, i3dBuffer, ctmFiles);
     });
   }
 
