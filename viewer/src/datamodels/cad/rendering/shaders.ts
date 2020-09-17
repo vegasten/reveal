@@ -2,7 +2,35 @@
  * Copyright 2020 Cognite AS
  */
 
-import glsl from 'glslify';
+import simpleFrag from '@/glsl/sector/simple.frag';
+import simpleVert from '@/glsl/sector/simple.vert';
+import meshFrag from '@/glsl/sector/mesh.frag';
+import meshVert from '@/glsl/sector/mesh.vert';
+import instancedMeshFrag from '@/glsl/sector/instancedMesh.frag';
+import instancedMeshVert from '@/glsl/sector/instancedMesh.vert';
+import instancedFrag from '@/glsl/sector/primitives/instanced.frag';
+import instancedVert from '@/glsl/sector/primitives/instanced.vert';
+import circleFrag from '@/glsl/sector/primitives/circle.frag';
+import circleVert from '@/glsl/sector/primitives/circle.vert';
+import coneFrag from '@/glsl/sector/primitives/cone.frag';
+import coneVert from '@/glsl/sector/primitives/cone.vert';
+import eccentricConeFrag from '@/glsl/sector/primitives/eccentricCone.frag';
+import eccentricConeVert from '@/glsl/sector/primitives/eccentricCone.vert';
+import ellipsoidSegmentFrag from '@/glsl/sector/primitives/ellipsoidSegment.frag';
+import ellipsoidSegmentVert from '@/glsl/sector/primitives/ellipsoidSegment.vert';
+import generalCylinderFrag from '@/glsl/sector/primitives/generalCylinder.frag';
+import generalCylinderVert from '@/glsl/sector/primitives/generalCylinder.vert';
+import generalringFrag from '@/glsl/sector/primitives/generalring.frag';
+import generalringVert from '@/glsl/sector/primitives/generalring.vert';
+import torusSegmentFrag from '@/glsl/sector/primitives/torusSegment.frag';
+import torusSegmentVert from '@/glsl/sector/primitives/torusSegment.vert';
+import trapeziumFrag from '@/glsl/sector/primitives/trapezium.frag';
+import trapeziumVert from '@/glsl/sector/primitives/trapezium.vert';
+import sectorCoverageFrag from '@/glsl/sector/sectorCoverage.frag';
+import sectorCoverageVert from '@/glsl/sector/sectorCoverage.vert';
+
+import edgeDetectionVert from '@/glsl/post-processing/edgeDetection.vert';
+import edgeDetectCombineFrag from '@/glsl/post-processing/edgeDetectCombine.frag';
 
 /**
  * Defines used to enable debugging features in shaders.
@@ -19,76 +47,76 @@ export const sectorShaders = {
   // "Regular" meshes
   // ----------------
   simpleMesh: {
-    fragment: glsl(require('@/glsl/sector/simple.frag').default),
-    vertex: glsl(require('@/glsl/sector/simple.vert').default)
+    fragment: simpleFrag,
+    vertex: simpleVert
   },
   detailedMesh: {
-    fragment: glsl(require('@/glsl/sector/mesh.frag').default),
-    vertex: glsl(require('@/glsl/sector/mesh.vert').default)
+    fragment: meshFrag,
+    vertex: meshVert
   },
   instancedMesh: {
-    fragment: glsl(require('@/glsl/sector/instancedMesh.frag').default),
-    vertex: glsl(require('@/glsl/sector/instancedMesh.vert').default)
+    fragment: instancedMeshFrag,
+    vertex: instancedMeshVert
   },
 
   // ----------------
   // Primitives
   // ----------------
   boxPrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/instanced.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/instanced.vert').default)
+    fragment: instancedFrag,
+    vertex: instancedVert
   },
   circlePrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/circle.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/circle.vert').default)
+    fragment: circleFrag,
+    vertex: circleVert
   },
   conePrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/cone.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/cone.vert').default)
+    fragment: coneFrag,
+    vertex: coneVert
   },
   eccentricConePrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/eccentricCone.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/eccentricCone.vert').default)
+    fragment: eccentricConeFrag,
+    vertex: eccentricConeVert
   },
   ellipsoidSegmentPrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/ellipsoidSegment.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/ellipsoidSegment.vert').default)
+    fragment: ellipsoidSegmentFrag,
+    vertex: ellipsoidSegmentVert
   },
   generalCylinderPrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/generalCylinder.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/generalCylinder.vert').default)
+    fragment: generalCylinderFrag,
+    vertex: generalCylinderVert
   },
   generalRingPrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/generalring.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/generalring.vert').default)
+    fragment: generalringFrag,
+    vertex: generalringVert
   },
   nutPrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/instanced.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/instanced.vert').default)
+    fragment: instancedFrag,
+    vertex: instancedVert
   },
   quadPrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/instanced.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/instanced.vert').default)
+    fragment: instancedFrag,
+    vertex: instancedVert
   },
   torusSegmentPrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/torusSegment.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/torusSegment.vert').default)
+    fragment: torusSegmentFrag,
+    vertex: torusSegmentVert
   },
   trapeziumPrimitive: {
-    fragment: glsl(require('@/glsl/sector/primitives/trapezium.frag').default),
-    vertex: glsl(require('@/glsl/sector/primitives/trapezium.vert').default)
+    fragment: trapeziumFrag,
+    vertex: trapeziumVert
   }
 };
 
 export const edgeDetectionShaders = {
-  combine: glsl(require('@/glsl/post-processing/edge-detect-combine.frag').default),
-  vertex: glsl(require('@/glsl/post-processing/edge-detection.vert').default)
+  combine: edgeDetectCombineFrag,
+  vertex: edgeDetectionVert
 };
 
 /**
  * Shaders use to estimate how many pixels a sector covers on screen.
  */
 export const coverageShaders = {
-  fragment: glsl(require('@/glsl/sector/sectorCoverage.frag').default),
-  vertex: glsl(require('@/glsl/sector/sectorCoverage.vert').default)
+  fragment: sectorCoverageFrag,
+  vertex: sectorCoverageVert
 };

@@ -2,17 +2,16 @@
  * Copyright 2020 Cognite AS
  */
 
-import glsl from 'glslify';
 import * as THREE from 'three';
 
 import { RenderMode } from '../RenderMode';
 import { CadNode } from '../../CadNode';
 
-const vertexShaderAntialias = glsl(require('@/glsl/post-processing/fxaa.vert').default);
-const fragmentShaderAntialias = glsl(require('@/glsl/post-processing/fxaa.frag').default);
-const passThroughVertexShader = glsl(require('@/glsl/post-processing/passthrough.vert').default);
-const ssaoShader = glsl(require('@/glsl/post-processing/ssao.frag').default);
-const ssaoFinalShader = glsl(require('@/glsl/post-processing/ssao-final.frag').default);
+import vertexShaderAntialias from '@/glsl/post-processing/fxaa.vert';
+import fragmentShaderAntialias from '@/glsl/post-processing/fxaa.frag';
+import passThroughVertexShader from '@/glsl/post-processing/passthrough.vert';
+import ssaoShader from '@/glsl/post-processing/ssao.frag';
+import ssaoFinalShader from '@/glsl/post-processing/ssao-final.frag';
 
 interface Uniforms {
   [uniform: string]: THREE.IUniform;

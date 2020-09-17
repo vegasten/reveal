@@ -1,5 +1,5 @@
-#pragma glslify: rand2d = require('../math/rand2d.glsl')
-#pragma glslify: isSliced = require('../base/isSliced.glsl', NUM_CLIPPING_PLANES=NUM_CLIPPING_PLANES, UNION_CLIPPING_PLANES=UNION_CLIPPING_PLANES)
+@include "../math/rand2d.glsl"
+@include "../base/isSliced.glsl"
 
 varying mediump vec3 v_color;
 varying lowp float v_coverageFactor;
@@ -8,7 +8,7 @@ varying lowp vec2 v_seed;
 varying vec3 v_viewPosition;
 
 void main() {
-    
+
     if(isSliced(v_viewPosition)){
       discard;
     }

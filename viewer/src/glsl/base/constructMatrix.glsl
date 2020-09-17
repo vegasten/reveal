@@ -10,5 +10,3 @@ mat4 constructMatrix(vec4 column_0, vec4 column_1, vec4 column_2, vec4 column_3)
     column_3
   );
 }
-
-#pragma glslify: export(constructMatrix)

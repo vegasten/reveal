@@ -26,5 +26,3 @@ float updateFragmentDepth(vec3 p, mat4 projectionMatrix){
 }
 
 #endif
-
-#pragma glslify:export(updateFragmentDepth)

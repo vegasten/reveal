@@ -2,11 +2,17 @@
  * Copyright 2020 Cognite AS
  */
 
-declare module 'glslify' {
-  export default function glsl(shader: string): string;
+declare module '*.css' {
+  const src: string;
+  export default src;
 }
 
-declare module '*.css' {
+declare module '*.vert' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.frag' {
   const src: string;
   export default src;
 }

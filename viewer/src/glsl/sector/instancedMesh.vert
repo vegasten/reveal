@@ -1,4 +1,4 @@
-#pragma glslify: constructMatrix = require('../base/constructMatrix.glsl')
+@include "../base/constructMatrix.glsl"
 
 attribute vec4 a_instanceMatrix_column_0;
 attribute vec4 a_instanceMatrix_column_1;

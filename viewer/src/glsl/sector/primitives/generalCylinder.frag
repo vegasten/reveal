@@ -1,10 +1,10 @@
-#pragma glslify: mul3 = require('../../math/mul3.glsl')
-#pragma glslify: displaceScalar = require('../../math/displaceScalar.glsl')
-#pragma glslify: updateFragmentDepth = require('../../base/updateFragmentDepth.glsl')
-#pragma glslify: determineVisibility = require('../../base/determineVisibility.glsl');
-#pragma glslify: updateFragmentColor = require('../../base/updateFragmentColor.glsl')
-#pragma glslify: isSliced = require('../../base/isSliced.glsl', NUM_CLIPPING_PLANES=NUM_CLIPPING_PLANES, UNION_CLIPPING_PLANES=UNION_CLIPPING_PLANES)
-#pragma glslify: determineColor = require('../../base/determineColor.glsl');
+@include "../../math/mul3.glsl"
+@include "../../math/displaceScalar.glsl"
+@include "../../base/updateFragmentDepth.glsl"
+@include "../../base/determineVisibility.glsl"
+@include "../../base/updateFragmentColor.glsl"
+@include "../../base/isSliced.glsl"
+@include "../../base/determineColor.glsl"
 
 #define PI 3.14159265359
 #define PI2 6.28318530718

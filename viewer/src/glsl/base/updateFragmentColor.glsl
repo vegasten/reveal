@@ -1,6 +1,6 @@
-#pragma glslify: rgb2hsv = require('../color/rgb2hsv.glsl')
-#pragma glslify: hsv2rgb = require('../color/hsv2rgb.glsl')
-#pragma glslify: packIntToColor = require('../color/packIntToColor.glsl')
+@include "../color/rgb2hsv.glsl"
+@include "../color/hsv2rgb.glsl"
+@include "../color/packIntToColor.glsl"
 
 const int RenderTypeColor = 1;
 const int RenderTypeNormal = 2;
@@ -21,13 +21,13 @@ void updateFragmentColor(int renderMode, vec4 color, float treeIndex, vec3 norma
         hsv.z = min(0.6 * hsv.z + 0.4, 1.0);
         vec3 colorRGB = hsv2rgb(hsv);
         float amplitude = max(0.0, dot(normal, vec3(0.0, 0.0, 1.0)));
-        
+
         vec4 albedo = vec4(colorRGB * (0.4 + 0.6 * amplitude), 1.0);
 
         vec2 cap = normal.xy * 0.5 + 0.5;
 
         vec4 mc = vec4(texture2D(matCapTexture, cap).rgb, 1.0);
-        
+
         gl_FragColor = vec4(albedo.rgb * mc.rgb * 1.7, color.a);
 
     } else if (renderMode == RenderTypePackColorAndNormal) {
@@ -56,5 +56,3 @@ void updateFragmentColor(int renderMode, vec4 color, float treeIndex, vec3 norma
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
     }
 }
-
-#pragma glslify: export(updateFragmentColor)

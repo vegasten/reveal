@@ -30,7 +30,7 @@ module.exports = env => {
     },
     target: 'web',
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.js', '.glsl', '.vert', '.frag'],
       symlinks: false,
       alias: {
         '@': resolve('src')
@@ -61,7 +61,14 @@ module.exports = env => {
         {
           test: /\.(glsl|vert|frag)$/,
           exclude: '/node_modules/',
-          use: ['raw-loader', 'glslify-loader']
+          use: [
+            {
+              loader: 'webpack-glsl-minify',
+              options: {
+                output: 'source'
+              }
+            }
+          ]
         },
         {
           test: /\.css$/,

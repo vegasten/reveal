@@ -22,5 +22,3 @@ bool isSliced(vec3 point) {
 #endif
   return false;
 }
-
-#pragma glslify: export(isSliced)

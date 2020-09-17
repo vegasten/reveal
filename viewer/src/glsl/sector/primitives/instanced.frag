@@ -1,7 +1,7 @@
-#pragma glslify: updateFragmentColor = require('../../base/updateFragmentColor.glsl')
-#pragma glslify: determineVisibility = require('../../base/determineVisibility.glsl');
-#pragma glslify: determineColor = require('../../base/determineColor.glsl');
-#pragma glslify: isSliced = require('../../base/isSliced.glsl', NUM_CLIPPING_PLANES=NUM_CLIPPING_PLANES, UNION_CLIPPING_PLANES=UNION_CLIPPING_PLANES)
+@include "../../base/updateFragmentColor.glsl"
+@include "../../base/determineVisibility.glsl"
+@include "../../base/determineColor.glsl"
+@include "../../base/isSliced.glsl"
 
 varying float v_treeIndex;
 varying vec3 v_normal;

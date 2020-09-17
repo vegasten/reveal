@@ -1,5 +1,5 @@
 
-float displaceScalar(vec3 point, float scalar, 
+float displaceScalar(vec3 point, float scalar,
   float treeIndex, vec3 cameraPosition, mat4 inverseModelMatrix) {
 
   // Displaces a scalar based on distance to camera to avoid z-fighting
@@ -17,4 +17,3 @@ float displaceScalar(vec3 point, float scalar,
   float displacement = min(maxDisplacement, scaleFactor * rnd * distanceToCamera / maxDistanceToCamera);
   return scalar + displacement;
 }
-#pragma glslify: export(displaceScalar)

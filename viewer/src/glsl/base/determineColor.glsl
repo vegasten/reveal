@@ -18,5 +18,3 @@ vec4 determineColor(vec3 originalColor, sampler2D colorDataTexture, vec2 texture
 
     return vec4(originalColor.rgb, overrideColor.a);
 }
-
-#pragma glslify: export(determineColor)

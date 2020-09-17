@@ -1,8 +1,8 @@
-#pragma glslify: updateFragmentDepth = require('../../base/updateFragmentDepth.glsl')
-#pragma glslify: determineVisibility = require('../../base/determineVisibility.glsl');
-#pragma glslify: updateFragmentColor = require('../../base/updateFragmentColor.glsl')
-#pragma glslify: isSliced = require('../../base/isSliced.glsl', NUM_CLIPPING_PLANES=NUM_CLIPPING_PLANES, UNION_CLIPPING_PLANES=UNION_CLIPPING_PLANES)
-#pragma glslify: determineColor = require('../../base/determineColor.glsl');
+@include "../../base/updateFragmentDepth.glsl"
+@include "../../base/determineVisibility.glsl"
+@include "../../base/updateFragmentColor.glsl"
+@include "../../base/isSliced.glsl"
+@include "../../base/determineColor.glsl"
 
 uniform sampler2D colorDataTexture;
 uniform sampler2D overrideVisibilityPerTreeIndex;

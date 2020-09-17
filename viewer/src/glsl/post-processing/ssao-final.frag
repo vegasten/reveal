@@ -3,8 +3,8 @@
 // Efficient Gaussian blur based on technique described by Daniel Rákos in
 // http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
 //
-#pragma glslify: rgb2hsv = require('../color/rgb2hsv.glsl')
-#pragma glslify: hsv2rgb = require('../color/hsv2rgb.glsl')
+@include "../color/rgb2hsv.glsl"
+@include "../color/hsv2rgb.glsl"
 
 #include <packing>
 

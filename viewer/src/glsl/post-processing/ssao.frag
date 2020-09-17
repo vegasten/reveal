@@ -4,8 +4,8 @@
  * @author Mugen87 / https://github.com/Mugen87
  */
 
-#pragma glslify: rgb2hsv = require('../color/rgb2hsv.glsl')
-#pragma glslify: hsv2rgb = require('../color/hsv2rgb.glsl')
+@include "../color/rgb2hsv.glsl"
+@include "../color/hsv2rgb.glsl"
 
 #define KERNEL_SIZE 32
 
