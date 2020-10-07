@@ -133,8 +133,6 @@ export class Cognite3DViewer {
       new THREE.WebGLRenderer({
         antialias: shouldEnableAntialiasing()
       });
-    this.canvas.style.width = '640px';
-    this.canvas.style.height = '480px';
     this.canvas.style.minWidth = '100%';
     this.canvas.style.minHeight = '100%';
     this.canvas.style.maxWidth = '100%';
@@ -1172,11 +1170,25 @@ export class Cognite3DViewer {
     const isOptimalSize =
       Math.abs(rendererPixelWidth - width) < maxError && Math.abs(rendererPixelHeight - height) < maxError;
 
+    // eslint-disable-next-line no-console
+    console.log({
+      rendererSize,
+      clientWidth,
+      clientPixelWidth,
+      width,
+      clientHeight,
+      clientPixelHeight,
+      height,
+      scale,
+      clientTextureSize,
+      isOptimalSize
+    });
+
     if (isOptimalSize) {
       return false;
     }
 
-    this.renderer.setSize(width, height);
+    this.renderer.setSize(width, height, false);
 
     adjustCamera(this.camera, width, height);
 

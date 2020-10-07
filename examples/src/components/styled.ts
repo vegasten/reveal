@@ -11,11 +11,15 @@ export const Container = styled.div`
 
 export const CanvasWrapper = styled(Container)`
   position: relative;
-  overflow: hidden;
+  outline: 1px solid red;
+  max-height: 100vh;
   & > canvas {
-    display: flex;
-    flex-grow: 1;
-    max-height: 100vh;
+    outline: 1px dashed blue;
+    max-height: 100%;
+    min-height: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    //display: block;
   }
 `;
 
