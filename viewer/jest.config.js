@@ -16,7 +16,7 @@ module.exports = {
   moduleNameMapper: {
     '\\.(frag|vert)$': '<rootDir>/src/__mocks__/glslMocks.js',
     '\\.css$': '<rootDir>/src/__mocks__/cssMock.js',
-    '^@/(.*)': '<rootDir>/src/$1'
+    '^@cognite/reveal/(.*)': '<rootDir>/src/$1'
   },
   globals: {
     __webpack_public_path__: '',

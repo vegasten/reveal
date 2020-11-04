@@ -1,6 +1,6 @@
 {
-  "name": "@cognite/reveal",
-  "version": "1.2.0",
+  "name": "mn-reveal-release-test",
+  "version": "1.2.1-alpha.2",
   "private": true,
   "description": "WebGL based 3D viewer for CAD and point clouds processed in Cognite Data Fusion.",
   "repository": {
@@ -107,7 +107,7 @@
   },
   "peerDependencies": {
     "@cognite/sdk": "^3.0.0",
-    "three": "0.117.x"
+    "three": "^0.122.0"
   },
   "husky": {
     "hooks": {

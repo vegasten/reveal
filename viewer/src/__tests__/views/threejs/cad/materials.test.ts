@@ -2,8 +2,8 @@
  * Copyright 2020 Cognite AS
  */
 
-import { createMaterials } from '@/datamodels/cad/rendering/materials';
-import { RenderMode } from '@/datamodels/cad/rendering/RenderMode';
+import { createMaterials } from '@cognite/reveal/datamodels/cad/rendering/materials';
+import { RenderMode } from '@cognite/reveal/datamodels/cad/rendering/RenderMode';
 
 describe('createMaterials', () => {
   test('Positive treeIndexCount, creates materials', () => {

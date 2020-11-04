@@ -4,9 +4,9 @@
 
 import * as THREE from 'three';
 
-import { MaterialManager } from '@/datamodels/cad/MaterialManager';
-import { EffectRenderManager } from '@/datamodels/cad/rendering/EffectRenderManager';
-import { RenderMode } from '@/datamodels/cad/rendering/RenderMode';
+import { MaterialManager } from '@cognite/reveal/datamodels/cad/MaterialManager';
+import { EffectRenderManager } from '@cognite/reveal/datamodels/cad/rendering/EffectRenderManager';
+import { RenderMode } from '@cognite/reveal/datamodels/cad/rendering/RenderMode';
 
 describe('EffectRenderManager', () => {
   const materialManager = new MaterialManager();

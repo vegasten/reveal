@@ -5,11 +5,11 @@
 import { of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { CadSectorParser } from '@/datamodels/cad/sector/CadSectorParser';
-import { WorkerPool } from '@/utilities/workers/WorkerPool';
-import { SectorQuads } from '@/datamodels/cad/rendering/types';
+import { CadSectorParser } from '@cognite/reveal/datamodels/cad/sector/CadSectorParser';
+import { WorkerPool } from '@cognite/reveal/utilities/workers/WorkerPool';
+import { SectorQuads } from '@cognite/reveal/datamodels/cad/rendering/types';
 
-jest.mock('@/utilities/workers/WorkerPool');
+jest.mock('@cognite/reveal/utilities/workers/WorkerPool');
 
 describe('CadSectorParser', () => {
   const workerPool: WorkerPool = new WorkerPool();

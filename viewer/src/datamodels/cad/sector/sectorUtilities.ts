@@ -12,9 +12,9 @@ import { createPrimitives } from '../rendering/primitives';
 import { createTriangleMeshes } from '../rendering/triangleMeshes';
 import { createInstancedMeshes } from '../rendering/instancedMeshes';
 import { SectorQuads } from '../rendering/types';
-import { disposeAttributeArrayOnUpload } from '@/utilities/disposeAttributeArrayOnUpload';
-import { toThreeJsBox3 } from '@/utilities';
-import { traverseDepthFirst } from '@/utilities/objectTraversal';
+import { disposeAttributeArrayOnUpload } from '@cognite/reveal/utilities/disposeAttributeArrayOnUpload';
+import { toThreeJsBox3 } from '@cognite/reveal/utilities';
+import { traverseDepthFirst } from '@cognite/reveal/utilities/objectTraversal';
 
 const emptyGeometry = new THREE.Geometry();
 

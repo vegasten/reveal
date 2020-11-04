@@ -6,11 +6,11 @@ import * as THREE from 'three';
 
 import { CadMetadataParser } from './parsers/CadMetadataParser';
 import { SectorScene, WellKnownDistanceToMeterConversionFactors } from './sector/types';
-import { File3dFormat } from '@/utilities';
-import { CadModelMetadata } from '@/datamodels/cad/CadModelMetadata';
+import { File3dFormat } from '@cognite/reveal/utilities';
+import { CadModelMetadata } from '@cognite/reveal/datamodels/cad/CadModelMetadata';
 import { MetadataRepository } from '../base';
-import { transformCameraConfiguration } from '@/utilities/transformCameraConfiguration';
-import { ModelDataClient } from '@/utilities/networking/types';
+import { transformCameraConfiguration } from '@cognite/reveal/utilities/transformCameraConfiguration';
+import { ModelDataClient } from '@cognite/reveal/utilities/networking/types';
 
 type ModelIdentifierWithFormat<T> = T & { format: File3dFormat };
 

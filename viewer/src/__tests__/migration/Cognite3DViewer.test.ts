@@ -6,10 +6,10 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import { CogniteClient } from '@cognite/sdk';
 
-import { Cognite3DViewer } from '@/public/migration/Cognite3DViewer';
+import { Cognite3DViewer } from '@cognite/reveal/public/migration/Cognite3DViewer';
 
 import nock from 'nock';
-import { SectorCuller } from '@/datamodels/cad/sector/culling/SectorCuller';
+import { SectorCuller } from '@cognite/reveal/datamodels/cad/sector/culling/SectorCuller';
 
 const sceneJson = require('./scene.json');
 

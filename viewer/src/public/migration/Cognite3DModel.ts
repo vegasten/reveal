@@ -8,15 +8,15 @@ import { NodeIdAndTreeIndexMaps } from './NodeIdAndTreeIndexMaps';
 import { Color, CameraConfiguration } from './types';
 import { CogniteModelBase } from './CogniteModelBase';
 import { NotSupportedInMigrationWrapperError } from './NotSupportedInMigrationWrapperError';
-import { toThreeJsBox3, NumericRange } from '@/utilities';
-import { CadRenderHints, CadNode } from '@/experimental';
-import { CadLoadingHints } from '@/datamodels/cad/CadLoadingHints';
-import { CadModelMetadata } from '@/datamodels/cad/CadModelMetadata';
-import { NodeAppearanceProvider, DefaultNodeAppearance } from '@/datamodels/cad/NodeAppearance';
-import { trackError } from '@/utilities/metrics';
+import { toThreeJsBox3, NumericRange } from '@cognite/reveal/utilities';
+import { CadRenderHints, CadNode } from '@cognite/reveal/experimental';
+import { CadLoadingHints } from '@cognite/reveal/datamodels/cad/CadLoadingHints';
+import { CadModelMetadata } from '@cognite/reveal/datamodels/cad/CadModelMetadata';
+import { NodeAppearanceProvider, DefaultNodeAppearance } from '@cognite/reveal/datamodels/cad/NodeAppearance';
+import { trackError } from '@cognite/reveal/utilities/metrics';
 import { SupportedModelTypes } from '../types';
-import { callActionWithIndicesAsync } from '@/utilities/callActionWithIndicesAsync';
-import { CogniteClientNodeIdAndTreeIndexMapper } from '@/utilities/networking/CogniteClientNodeIdAndTreeIndexMapper';
+import { callActionWithIndicesAsync } from '@cognite/reveal/utilities/callActionWithIndicesAsync';
+import { CogniteClientNodeIdAndTreeIndexMapper } from '@cognite/reveal/utilities/networking/CogniteClientNodeIdAndTreeIndexMapper';
 import { NodeStyleUpdater } from './NodeStyleUpdater';
 
 const mapCoordinatesBuffers = {

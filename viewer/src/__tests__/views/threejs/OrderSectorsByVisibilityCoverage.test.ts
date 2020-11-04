@@ -5,11 +5,11 @@
 import * as THREE from 'three';
 
 import { createSectorMetadata, SectorTree } from '../../testutils/createSectorMetadata';
-import { Box3 } from '@/utilities/Box3';
-import { GpuOrderSectorsByVisibilityCoverage, traverseDepthFirst } from '@/internal';
-import { SectorSceneImpl } from '@/datamodels/cad/sector/SectorScene';
-import { CadModelMetadata } from '@/datamodels/cad/';
-import { SectorScene, SectorMetadata } from '@/datamodels/cad/sector/types';
+import { Box3 } from '@cognite/reveal/utilities/Box3';
+import { GpuOrderSectorsByVisibilityCoverage, traverseDepthFirst } from '@cognite/reveal/internal';
+import { SectorSceneImpl } from '@cognite/reveal/datamodels/cad/sector/SectorScene';
+import { CadModelMetadata } from '@cognite/reveal/datamodels/cad/';
+import { SectorScene, SectorMetadata } from '@cognite/reveal/datamodels/cad/sector/types';
 
 describe('OrderSectorsByVisibilityCoverage', () => {
   const glContext: WebGLRenderingContext = require('gl')(64, 64);

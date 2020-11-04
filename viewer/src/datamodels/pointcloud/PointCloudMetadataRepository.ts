@@ -4,11 +4,11 @@
 
 import * as THREE from 'three';
 
-import { PointCloudMetadata } from '@/datamodels/pointcloud/PointCloudMetadata';
+import { PointCloudMetadata } from '@cognite/reveal/datamodels/pointcloud/PointCloudMetadata';
 import { MetadataRepository } from '../base';
-import { File3dFormat } from '@/utilities/types';
-import { transformCameraConfiguration } from '@/utilities/transformCameraConfiguration';
-import { ModelDataClient } from '@/utilities/networking/types';
+import { File3dFormat } from '@cognite/reveal/utilities/types';
+import { transformCameraConfiguration } from '@cognite/reveal/utilities/transformCameraConfiguration';
+import { ModelDataClient } from '@cognite/reveal/utilities/networking/types';
 
 type ModelIdentifierWithFormat<T> = T & { format: File3dFormat };
 

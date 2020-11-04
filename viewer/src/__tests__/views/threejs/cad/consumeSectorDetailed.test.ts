@@ -2,15 +2,15 @@
  * Copyright 2020 Cognite AS
  */
 
-import { SectorMetadata, SectorGeometry } from '@/datamodels/cad/sector/types';
-import { Box3 } from '@/utilities/Box3';
+import { SectorMetadata, SectorGeometry } from '@cognite/reveal/datamodels/cad/sector/types';
+import { Box3 } from '@cognite/reveal/utilities/Box3';
 import { vec3 } from 'gl-matrix';
 import { createEmptySector } from '../../../models/cad/emptySector';
-import { createMaterials } from '@/datamodels/cad/rendering/materials';
+import { createMaterials } from '@cognite/reveal/datamodels/cad/rendering/materials';
 import 'jest-extended';
-import { RenderMode } from '@/datamodels/cad/rendering/RenderMode';
-import { consumeSectorDetailed } from '@/datamodels/cad/sector/sectorUtilities';
-import { TriangleMesh, InstancedMeshFile, InstancedMesh } from '@/datamodels/cad/rendering/types';
+import { RenderMode } from '@cognite/reveal/datamodels/cad/rendering/RenderMode';
+import { consumeSectorDetailed } from '@cognite/reveal/datamodels/cad/sector/sectorUtilities';
+import { TriangleMesh, InstancedMeshFile, InstancedMesh } from '@cognite/reveal/datamodels/cad/rendering/types';
 
 const materials = createMaterials(10, RenderMode.Color, []);
 

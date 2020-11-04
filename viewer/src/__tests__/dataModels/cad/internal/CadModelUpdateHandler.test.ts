@@ -4,17 +4,17 @@
 
 import * as THREE from 'three';
 
-import { CadNode } from '@/datamodels/cad';
-import { MaterialManager } from '@/datamodels/cad/MaterialManager';
-import { CadSectorParser } from '@/datamodels/cad/sector/CadSectorParser';
-import { SimpleAndDetailedToSector3D } from '@/datamodels/cad/sector/SimpleAndDetailedToSector3D';
-import { CachedRepository } from '@/datamodels/cad/sector/CachedRepository';
-import { SectorCuller } from '@/datamodels/cad/sector/culling/SectorCuller';
+import { CadNode } from '@cognite/reveal/datamodels/cad';
+import { MaterialManager } from '@cognite/reveal/datamodels/cad/MaterialManager';
+import { CadSectorParser } from '@cognite/reveal/datamodels/cad/sector/CadSectorParser';
+import { SimpleAndDetailedToSector3D } from '@cognite/reveal/datamodels/cad/sector/SimpleAndDetailedToSector3D';
+import { CachedRepository } from '@cognite/reveal/datamodels/cad/sector/CachedRepository';
+import { SectorCuller } from '@cognite/reveal/datamodels/cad/sector/culling/SectorCuller';
 
 import { createCadModelMetadata } from '../../../testutils/createCadModelMetadata';
 import { generateSectorTree } from '../../../testutils/createSectorMetadata';
-import { CadModelUpdateHandler } from '@/datamodels/cad/CadModelUpdateHandler';
-import { BinaryFileProvider } from '@/utilities/networking/types';
+import { CadModelUpdateHandler } from '@cognite/reveal/datamodels/cad/CadModelUpdateHandler';
+import { BinaryFileProvider } from '@cognite/reveal/utilities/networking/types';
 
 describe('CadModelUpdateHandler', () => {
   const modelSectorProvider: BinaryFileProvider = {

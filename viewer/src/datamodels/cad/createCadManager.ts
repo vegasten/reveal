@@ -12,10 +12,10 @@ import { CadSectorParser } from './sector/CadSectorParser';
 import { CachedRepository } from './sector/CachedRepository';
 import { SimpleAndDetailedToSector3D } from './sector/SimpleAndDetailedToSector3D';
 import { ByVisibilityGpuSectorCuller } from './sector/culling/ByVisibilityGpuSectorCuller';
-import { LocalModelDataClient } from '@/utilities/networking/LocalModelDataClient';
-import { CdfModelDataClient } from '@/utilities/networking/CdfModelDataClient';
-import { LocalModelIdentifier, CdfModelIdentifier, ModelDataClient } from '@/utilities/networking/types';
-import { RevealOptions } from '@/public/types';
+import { LocalModelDataClient } from '@cognite/reveal/utilities/networking/LocalModelDataClient';
+import { CdfModelDataClient } from '@cognite/reveal/utilities/networking/CdfModelDataClient';
+import { LocalModelIdentifier, CdfModelIdentifier, ModelDataClient } from '@cognite/reveal/utilities/networking/types';
+import { RevealOptions } from '@cognite/reveal/public/types';
 
 export function createLocalCadManager(
   client: LocalModelDataClient,

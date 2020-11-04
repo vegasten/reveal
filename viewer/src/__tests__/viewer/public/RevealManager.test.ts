@@ -4,10 +4,10 @@
 
 import * as THREE from 'three';
 
-import { ModelDataClient } from '@/utilities/networking/types';
-import { SectorCuller } from '@/internal';
-import { createRevealManager } from '@/public/createRevealManager';
-import { RevealManager } from '@/public/RevealManager';
+import { ModelDataClient } from '@cognite/reveal/utilities/networking/types';
+import { SectorCuller } from '@cognite/reveal/internal';
+import { createRevealManager } from '@cognite/reveal/public/createRevealManager';
+import { RevealManager } from '@cognite/reveal/public/RevealManager';
 
 describe('RevealManager', () => {
   const mockClient: ModelDataClient<{ id: number }> = {

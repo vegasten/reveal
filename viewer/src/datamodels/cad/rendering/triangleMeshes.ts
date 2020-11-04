@@ -3,7 +3,7 @@
  */
 
 import * as THREE from 'three';
-import { disposeAttributeArrayOnUpload } from '@/utilities/disposeAttributeArrayOnUpload';
+import { disposeAttributeArrayOnUpload } from '@cognite/reveal/utilities/disposeAttributeArrayOnUpload';
 import { TriangleMesh } from './types';
 
 export function createTriangleMeshes(

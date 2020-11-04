@@ -12,8 +12,8 @@ import { CogniteClient } from '@cognite/sdk';
 import { debounceTime, filter, map } from 'rxjs/operators';
 import { merge, Subject, Subscription, fromEventPattern, Observable } from 'rxjs';
 
-import { from3DPositionToRelativeViewportCoordinates } from '@/utilities/worldToViewport';
-import { intersectCadNodes } from '@/datamodels/cad/picking';
+import { from3DPositionToRelativeViewportCoordinates } from '@cognite/reveal/utilities/worldToViewport';
+import { intersectCadNodes } from '@cognite/reveal/datamodels/cad/picking';
 
 import {
   AddModelOptions,
@@ -28,17 +28,17 @@ import { NotSupportedInMigrationWrapperError } from './NotSupportedInMigrationWr
 import RenderController from './RenderController';
 import { CogniteModelBase } from './CogniteModelBase';
 
-import { CdfModelDataClient } from '@/utilities/networking/CdfModelDataClient';
+import { CdfModelDataClient } from '@cognite/reveal/utilities/networking/CdfModelDataClient';
 import { Cognite3DModel } from './Cognite3DModel';
 import { CognitePointCloudModel } from './CognitePointCloudModel';
-import { BoundingBoxClipper, File3dFormat, LoadingState } from '@/utilities';
-import { Spinner } from '@/utilities/Spinner';
-import { trackError, trackEvent } from '@/utilities/metrics';
+import { BoundingBoxClipper, File3dFormat, LoadingState } from '@cognite/reveal/utilities';
+import { Spinner } from '@cognite/reveal/utilities/Spinner';
+import { trackError, trackEvent } from '@cognite/reveal/utilities/metrics';
 import { RevealManager } from '../RevealManager';
 import { createCdfRevealManager } from '../createRevealManager';
-import { CdfModelIdentifier } from '@/utilities/networking/types';
+import { CdfModelIdentifier } from '@cognite/reveal/utilities/networking/types';
 import { RevealOptions, SectorNodeIdToTreeIndexMapLoadedEvent } from '../types';
-import { SupportedModelTypes } from '@/datamodels/base';
+import { SupportedModelTypes } from '@cognite/reveal/datamodels/base';
 
 /**
  * @example

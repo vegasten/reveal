@@ -1,7 +1,7 @@
 /*!
  * Copyright 2020 Cognite AS
  */
-import { NumericRange } from '@/utilities';
+import { NumericRange } from '@cognite/reveal/utilities';
 
 /**
  * Helper class that schedules node apperance update to avoid

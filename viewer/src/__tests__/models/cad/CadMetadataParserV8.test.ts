@@ -2,10 +2,14 @@
  * Copyright 2020 Cognite AS
  */
 
-import { CadMetadataV8, parseCadMetadataV8, CadSectorMetadataV8 } from '@/datamodels/cad/parsers/CadMetadataParserV8';
-import { SectorMetadata } from '@/datamodels/cad/sector/types';
-import { Box3 } from '@/utilities/Box3';
-import { traverseDepthFirst } from '@/utilities/objectTraversal';
+import {
+  CadMetadataV8,
+  parseCadMetadataV8,
+  CadSectorMetadataV8
+} from '@cognite/reveal/datamodels/cad/parsers/CadMetadataParserV8';
+import { SectorMetadata } from '@cognite/reveal/datamodels/cad/sector/types';
+import { Box3 } from '@cognite/reveal/utilities/Box3';
+import { traverseDepthFirst } from '@cognite/reveal/utilities/objectTraversal';
 
 import { vec3 } from 'gl-matrix';
 

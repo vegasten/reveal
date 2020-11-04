@@ -4,9 +4,9 @@
 
 import * as THREE from 'three';
 import { vec3 } from 'gl-matrix';
-import { Box3 } from '@/utilities/Box3';
-import { traverseDepthFirst } from '@/utilities/objectTraversal';
-import { toThreeJsBox3 } from '@/utilities/threeConverters';
+import { Box3 } from '@cognite/reveal/utilities/Box3';
+import { traverseDepthFirst } from '@cognite/reveal/utilities/objectTraversal';
+import { toThreeJsBox3 } from '@cognite/reveal/utilities/threeConverters';
 import { SectorMetadata, SectorScene } from './types';
 
 export class SectorSceneImpl implements SectorScene {

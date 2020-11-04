@@ -33,7 +33,7 @@ module.exports = env => {
       extensions: ['.tsx', '.ts', '.js'],
       symlinks: false,
       alias: {
-        '@': resolve('src')
+        '@cognite/reveal': resolve('src')
       }
     },
     module: {
