@@ -208,6 +208,7 @@ export class EffectRenderManager {
         texelSize: { value: new THREE.Vector2(0, 0) },
         cameraNear: { value: 0.1 },
         cameraFar: { value: 10000 },
+        inverseProjectionMatrix: { value: new THREE.Matrix4() },
         edgeStrengthMultiplier: { value: 2.5 },
         edgeGrayScaleIntensity: { value: 0.1 }
       },
@@ -366,6 +367,7 @@ export class EffectRenderManager {
       switch (this.antiAliasingMode) {
         case AntiAliasingMode.FXAA:
           // Composite view
+          this._combineOutlineDetectionMaterial.uniforms.inverseProjectionMatrix.value = camera.projectionMatrixInverse;
           this.renderComposition(renderer, camera, this._compositionTarget);
 
           // Anti-aliased version to screen
