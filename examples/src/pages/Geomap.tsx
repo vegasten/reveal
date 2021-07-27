@@ -19,9 +19,7 @@ export function Geomap() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const [loadingState, setLoadingState] = useState<reveal.utilities.LoadingState>({ isLoading: false, itemsLoaded: 0, itemsRequested: 0, itemsCulled: 0 });
 
-  // var DEV_BING_API_KEY = "AuViYD_FXGfc3dxc0pNa8ZEJxyZyPq1lwOLPCOydV3f0tlEVH-HKMgxZ9ilcRj-T";
   var DEV_MAPBOX_API_KEY = "pk.eyJ1IjoidGVudG9uZSIsImEiOiJjazBwNHU4eDQwZzE4M2VzOGhibWY5NXo5In0.8xpF1DEcT6Y4000vNhjj1g";
-  // var OPEN_MAP_TILES_SERVER_MAP = "";
 
   useEffect(() => {
     let revealManager: reveal.RevealManager<unknown>;
