@@ -57,6 +57,7 @@
     "@types/three": "0.128.0",
     "copy-webpack-plugin": "^6.2.1",
     "cross-env": "^7.0.2",
+    "geo-three": "^0.0.10",
     "jest-environment-puppeteer": "^4.4.0",
     "jest-image-snapshot": "^4.3.0",
     "jest-puppeteer": "^4.4.0",
